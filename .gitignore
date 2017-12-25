@@ -1,0 +1,10 @@
+dist/
+__pycache__/
+.cache/
+.tox/
+*.egg-info/
+*~
+.coverage
+.coverage\.*
+*.pyc
+*.swp
