@@ -3,8 +3,8 @@ from io import StringIO
 import numpy
 import pytest
 
-from mazes import load_maze
-from mazes import read_walls
+from mmsim.mazes import load_maze
+from mmsim.mazes import read_walls
 
 
 MAZE_00_OSHWDEM = """OSHWDEM Maze Generator v1.2 R42263
