@@ -1,5 +1,4 @@
 from itertools import product
-import time
 import struct
 
 import numpy

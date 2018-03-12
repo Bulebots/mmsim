@@ -34,13 +34,16 @@ class ZMQListener(QtCore.QObject):
             events = dict(self.poller.poll(10))
             if not events:
                 continue
-            for socket in events:
-                if events[socket] != zmq.POLLIN:
-                    continue
-                if socket == self.rep:
-                    self.message.emit(socket.recv())
-                elif socket == self.pull:
-                    self.rep.send(socket.recv())
+            self.process_events(events)
+
+    def process_events(self, events):
+        for socket in events:
+            if events[socket] != zmq.POLLIN:
+                continue
+            if socket == self.rep:
+                self.message.emit(socket.recv())
+            elif socket == self.pull:
+                self.rep.send(socket.recv())
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -107,7 +110,6 @@ class MainWindow(QtWidgets.QMainWindow):
         discovery = state[3:]
         self.maze.update_position(position)
         self.maze.update_discovery(discovery)
-
 
     def label_set_slider(self, value):
         self.label.setText('{}/{}'.format(value, len(self.history) - 1))
