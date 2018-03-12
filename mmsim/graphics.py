@@ -171,24 +171,16 @@ class MazeItem(GraphicsObject):
     def boundingRect(self):
         return QtCore.QRectF(self.template_picture.boundingRect())
 
-    def process_socket(self, socket):
-        print(time.time())
-        message = socket.recv()
-        if message.startswith(b'D'):
-            self.update_discovery(message.lstrip(b'D'))
-            socket.send(b'ok')
-        elif message.startswith(b'P'):
-            walls = self.update_position(message.lstrip(b'P'))
-            print('Walls: ', walls)
-            socket.send(struct.pack('3B', *walls))
-
     def update_position(self, position):
-        print('Received position: ', position)
         self.x, self.y, self.direction = struct.unpack('3B', position)
         self.direction = chr(self.direction)
         self.generatePosition()
         self.informViewBoundsChanged()
         return read_walls(self.template, self.x, self.y, self.direction)
+
+    def read_position_walls(self, position):
+        x, y, direction = struct.unpack('3B', position)
+        return read_walls(self.template, x, y, chr(direction))
 
     def update_discovery(self, discovery):
         order = chr(discovery[0])

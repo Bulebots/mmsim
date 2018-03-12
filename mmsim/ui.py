@@ -1,4 +1,5 @@
 from pathlib import Path
+import struct
 import sys
 import zmq
 
@@ -99,14 +100,30 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def slider_value_changed(self, value):
         self.label_set_slider(value)
+        if value < 0:
+            return
+        state = self.history[value]
+        position = state[:3]
+        discovery = state[3:]
+        self.maze.update_position(position)
+        self.maze.update_discovery(discovery)
+
 
     def label_set_slider(self, value):
         self.label.setText('{}/{}'.format(value, len(self.history) - 1))
 
     def signal_received(self, message):
-        self.history.append(message)
-        self.slider_update()
-        self.reply.send(b'received!')
+        if message.startswith(b'W'):
+            walls = self.maze.read_position_walls(message.lstrip(b'W'))
+            self.reply.send(struct.pack('3B', *walls))
+            return
+        if message.startswith(b'S'):
+            message = message.lstrip(b'S')
+            self.history.append(message)
+            self.reply.send(b'ok')
+            self.slider_update()
+            return
+        raise ValueError('Unknown message received!')
 
     def closeEvent(self, event):
         self.zeromq_listener.running = False
