@@ -3,6 +3,7 @@ import sys
 import zmq
 
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtWidgets import QSlider
 from pyqtgraph import GraphicsLayoutWidget
 
 from mazes import load_maze
@@ -48,7 +49,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle('Micromouse maze simulator')
         self.resize(600, 600)
 
+        self.history = []
+
         frame = QtWidgets.QFrame()
+        layout = QtWidgets.QVBoxLayout(frame)
+
         self.graphics = GraphicsLayoutWidget()
         viewbox = self.graphics.addViewBox()
         viewbox.setAspectLocked()
@@ -56,10 +61,19 @@ class MainWindow(QtWidgets.QMainWindow):
         template = load_maze(template_file)
         self.maze = MazeItem(template=template)
         viewbox.addItem(self.maze)
-        self.label = QtWidgets.QLabel('Ready')
 
-        layout = QtWidgets.QVBoxLayout(frame)
+        self.label = QtWidgets.QLabel()
+
+        self.slider = QSlider(QtCore.Qt.Horizontal)
+        self.slider.setSingleStep(1)
+        self.slider.setPageStep(10)
+        self.slider.setTickPosition(QSlider.TicksAbove)
+        self.slider.valueChanged.connect(self.slider_value_changed)
+        self.slider_update()
+        self.label.setText('Ready')
+
         layout.addWidget(self.graphics)
+        layout.addWidget(self.slider)
         layout.addWidget(self.label)
 
         self.setCentralWidget(frame)
@@ -77,7 +91,21 @@ class MainWindow(QtWidgets.QMainWindow):
 
         QtCore.QTimer.singleShot(0, self.thread.start)
 
+    def slider_update(self):
+        self.slider.setTickInterval(len(self.history) / 10)
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(len(self.history) - 1)
+        self.label_set_slider(self.slider.value())
+
+    def slider_value_changed(self, value):
+        self.label_set_slider(value)
+
+    def label_set_slider(self, value):
+        self.label.setText('{}/{}'.format(value, len(self.history) - 1))
+
     def signal_received(self, message):
+        self.history.append(message)
+        self.slider_update()
         self.reply.send(b'received!')
 
     def closeEvent(self, event):
