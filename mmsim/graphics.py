@@ -1,7 +1,5 @@
 from itertools import product
-from pathlib import Path
 import time
-import sys
 import struct
 
 import numpy
@@ -9,14 +7,10 @@ from pyqtgraph import (
     mkBrush,
     mkPen,
     GraphicsObject,
-    GraphicsWindow,
     QtCore,
     QtGui,
-    setConfigOptions,
 )
-import zmq
 
-from mazes import load_maze
 from mazes import read_walls
 
 from mazes import EAST_BIT
@@ -106,7 +100,6 @@ def paint_template(painter, walls):
 def paint_position(painter, x, y, direction):
     painter.setBrush(mkBrush(RED))
     painter.setPen(mkPen(None))
-    print(x, y, direction)
     if direction in ['E', 'W']:
         robot_width = 50
         robot_height = 100
@@ -216,30 +209,3 @@ class MazeItem(GraphicsObject):
         self.distances = distances
         self.generatePicture()
         self.informViewBoundsChanged()
-
-
-setConfigOptions(antialias=True)
-
-
-def run():
-    # Template walls
-    template_file = Path('./mazes/apec_2010.txt')
-    template = load_maze(template_file)
-
-    window = GraphicsWindow()
-    window.setWindowTitle('Maze viewer')
-    view = window.addViewBox()
-    view.setAspectLocked()
-
-    maze = MazeItem(template=template)
-    view.addItem(maze)
-
-    timer = QtCore.QTimer()
-    timer.timeout.connect(maze.update)
-    timer.start(10)
-
-    sys.exit(QtGui.QApplication.instance().exec_())
-
-
-if __name__ == '__main__':
-    run()

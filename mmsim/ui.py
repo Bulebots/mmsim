@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QSlider
 from pyqtgraph import GraphicsLayoutWidget
 
 from mazes import load_maze
-from simulation_server import MazeItem
+from graphics import MazeItem
 
 
 class ZMQListener(QtCore.QObject):
