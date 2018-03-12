@@ -146,12 +146,6 @@ class MazeItem(GraphicsObject):
         self.picture = QtGui.QPicture()
         self.position_picture = QtGui.QPicture()
 
-        self.context = zmq.Context()
-        self.puller = self.context.socket(zmq.REP)
-        self.puller.bind('tcp://127.0.0.1:6574')
-        self.poller = zmq.Poller()
-        self.poller.register(self.puller, zmq.POLLIN)
-
         self.generateTemplate()
 
     def generateTemplate(self):
@@ -183,16 +177,6 @@ class MazeItem(GraphicsObject):
 
     def boundingRect(self):
         return QtCore.QRectF(self.template_picture.boundingRect())
-
-    def update(self):
-        while True:
-            events = dict(self.poller.poll(0))
-            if not events:
-                break
-            for socket in events:
-                if events[socket] != zmq.POLLIN:
-                    continue
-                self.process_socket(socket)
 
     def process_socket(self, socket):
         print(time.time())
@@ -234,14 +218,14 @@ class MazeItem(GraphicsObject):
         self.informViewBoundsChanged()
 
 
-# Template walls
-template_file = Path('./mazes/apec_2010.txt')
-template = load_maze(template_file)
-
 setConfigOptions(antialias=True)
 
 
 def run():
+    # Template walls
+    template_file = Path('./mazes/apec_2010.txt')
+    template = load_maze(template_file)
+
     window = GraphicsWindow()
     window.setWindowTitle('Maze viewer')
     view = window.addViewBox()

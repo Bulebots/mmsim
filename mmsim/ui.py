@@ -1,7 +1,12 @@
+from pathlib import Path
 import sys
 import zmq
 
 from PyQt5 import QtCore, QtWidgets
+from pyqtgraph import GraphicsLayoutWidget
+
+from mazes import load_maze
+from simulation_server import MazeItem
 
 
 class ZMQListener(QtCore.QObject):
@@ -41,14 +46,20 @@ class MainWindow(QtWidgets.QMainWindow):
         super().__init__(parent)
 
         self.setWindowTitle('Micromouse maze simulator')
-        self.resize(1000, 600)
+        self.resize(600, 600)
 
         frame = QtWidgets.QFrame()
-        self.text_edit = QtWidgets.QTextEdit()
+        self.graphics = GraphicsLayoutWidget()
+        viewbox = self.graphics.addViewBox()
+        viewbox.setAspectLocked()
+        template_file = Path('../mazes/apec_2010.txt')
+        template = load_maze(template_file)
+        self.maze = MazeItem(template=template)
+        viewbox.addItem(self.maze)
         self.label = QtWidgets.QLabel('Ready')
 
         layout = QtWidgets.QVBoxLayout(frame)
-        layout.addWidget(self.text_edit)
+        layout.addWidget(self.graphics)
         layout.addWidget(self.label)
 
         self.setCentralWidget(frame)
