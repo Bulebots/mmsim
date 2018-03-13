@@ -73,8 +73,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.slider.setPageStep(10)
         self.slider.setTickPosition(QSlider.TicksAbove)
         self.slider.valueChanged.connect(self.slider_value_changed)
-        self.slider_update()
-        self.label.setText('Ready')
+        self.reset()
 
         layout.addWidget(self.graphics)
         layout.addWidget(self.slider)
@@ -95,15 +94,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         QtCore.QTimer.singleShot(0, self.thread.start)
 
+    def reset(self):
+        self.history = []
+        self.slider.setValue(-1)
+        self.slider.setRange(-1, -1)
+        self.label.setText('Ready')
+
     def slider_update(self):
         self.slider.setTickInterval(len(self.history) / 10)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(len(self.history) - 1)
+        self.slider.setRange(0, len(self.history) - 1)
         self.label_set_slider(self.slider.value())
 
     def slider_value_changed(self, value):
         self.label_set_slider(value)
-        if value < 0:
+        if not len(self.history):
             return
         state = self.history[value]
         position = state[:3]
@@ -125,7 +129,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.reply.send(b'ok')
             self.slider_update()
             return
-        raise ValueError('Unknown message received!')
+        if message == b'RESET':
+            self.reset()
+            self.reply.send(b'ok')
+            return
+        raise ValueError('Unknown message received! "{}"'.format(message))
 
     def closeEvent(self, event):
         self.zeromq_listener.running = False
