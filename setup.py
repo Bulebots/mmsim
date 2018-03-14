@@ -6,7 +6,7 @@ from mmsim import __version__
 
 
 setup(
-    name='Micromouse Maze Simulator',
+    name='mmsim',
     version=__version__,
     description='A simple Micromouse Maze Simulator server',
     long_description='''The server can load different mazes and any client
