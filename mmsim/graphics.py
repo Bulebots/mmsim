@@ -10,15 +10,15 @@ from pyqtgraph import (
     QtGui,
 )
 
-from mazes import read_walls
+from .mazes import read_walls
 
-from mazes import EAST_BIT
-from mazes import SOUTH_BIT
-from mazes import WEST_BIT
-from mazes import NORTH_BIT
-from mazes import VISITED_BIT
+from .mazes import EAST_BIT
+from .mazes import SOUTH_BIT
+from .mazes import WEST_BIT
+from .mazes import NORTH_BIT
+from .mazes import VISITED_BIT
 
-from mazes import MAZE_SIZE
+from .mazes import MAZE_SIZE
 
 
 CELL_WIDTH = 180

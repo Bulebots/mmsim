@@ -25,8 +25,14 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     keywords='micromouse maze server simulator',
+    entry_points={
+        'console_scripts': [
+            'mmsim = mmsim.commands:launch',
+        ],
+    },
     packages=['mmsim'],
     install_requires=[
+        'click',
         'numpy',
         'pyqtgraph',
         'pyqt5',

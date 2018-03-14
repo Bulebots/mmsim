@@ -7,19 +7,19 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QSlider
 from pyqtgraph import GraphicsLayoutWidget
 
-from mazes import load_maze
-from graphics import MazeItem
+from .mazes import load_maze
+from .graphics import MazeItem
 
 
 class ZMQListener(QtCore.QObject):
 
     message = QtCore.pyqtSignal(bytes)
 
-    def __init__(self, context):
+    def __init__(self, context, host, port):
         super().__init__()
 
         self.rep = context.socket(zmq.REP)
-        self.rep.bind('tcp://127.0.0.1:6574')
+        self.rep.bind('tcp://{host}:{port}'.format(host=host, port=port))
         self.pull = context.socket(zmq.PULL)
         self.pull.bind('inproc://reply')
 
@@ -47,7 +47,7 @@ class ZMQListener(QtCore.QObject):
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, host, port, maze, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Micromouse maze simulator')
@@ -61,7 +61,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphics = GraphicsLayoutWidget()
         viewbox = self.graphics.addViewBox()
         viewbox.setAspectLocked()
-        template_file = Path('../mazes/apec_2010.txt')
+        template_file = Path(maze)
         template = load_maze(template_file)
         self.maze = MazeItem(template=template)
         viewbox.addItem(self.maze)
@@ -86,7 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.reply.connect('inproc://reply')
 
         self.thread = QtCore.QThread()
-        self.zeromq_listener = ZMQListener(self.context)
+        self.zeromq_listener = ZMQListener(self.context, host=host, port=port)
         self.zeromq_listener.moveToThread(self.thread)
 
         self.thread.started.connect(self.zeromq_listener.loop)
@@ -141,9 +141,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread.wait()
 
 
-def run():
+def run(host, port, maze):
     app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow()
+    main = MainWindow(host=host, port=port, maze=maze)
     main.show()
     sys.exit(app.exec_())
 
