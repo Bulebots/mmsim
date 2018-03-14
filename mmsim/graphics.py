@@ -174,7 +174,7 @@ class MazeItem(GraphicsObject):
         self.x, self.y, self.direction = struct.unpack('3B', position)
         self.direction = chr(self.direction)
         self.generatePosition()
-        self.informViewBoundsChanged()
+        self.update()
         return read_walls(self.template, self.x, self.y, self.direction)
 
     def read_position_walls(self, position):
@@ -199,4 +199,4 @@ class MazeItem(GraphicsObject):
         self.walls = walls
         self.distances = distances
         self.generatePicture()
-        self.informViewBoundsChanged()
+        self.update()
