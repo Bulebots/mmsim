@@ -73,8 +73,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.search.textChanged.connect(self.filter_mazes)
 
         self.files = QListWidget()
-        for fname in self.maze_files:
-            self.files.addItem(str(fname))
         self.files.currentItemChanged.connect(self.list_value_changed)
 
         self.graphics = GraphicsLayoutWidget()
@@ -113,6 +111,7 @@ class MainWindow(QtWidgets.QMainWindow):
         main_widget.setLayout(main_layout)
 
         self.setCentralWidget(main_widget)
+        self.filter_mazes('')
 
         self.context = zmq.Context()
         self.reply = self.context.socket(zmq.PUSH)
