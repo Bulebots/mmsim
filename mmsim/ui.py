@@ -4,8 +4,13 @@ import sys
 import zmq
 
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QSlider
+from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QListWidget
+from PyQt5.QtWidgets import QSlider
+from PyQt5.QtWidgets import QSplitter
+from PyQt5.QtWidgets import QStatusBar
+from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5.QtWidgets import QWidget
 from pyqtgraph import GraphicsLayoutWidget
 
 from .mazes import load_maze
@@ -51,16 +56,24 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self, host, port, path, parent=None):
         super().__init__(parent)
 
+        self.path = path
+        self.maze_files = sorted(
+            x for x in self.path.iterdir() if x.is_file()
+        )
+
         self.setWindowTitle('Micromouse maze simulator')
         self.resize(800, 600)
 
         self.history = []
 
-        frame = QtWidgets.QFrame()
-        layout = QtWidgets.QGridLayout(frame)
+        self.status = QStatusBar()
+        self.setStatusBar(self.status)
+
+        self.search = QLineEdit()
+        self.search.textChanged.connect(self.filter_mazes)
 
         self.files = QListWidget()
-        for fname in sorted(x for x in path.iterdir() if x.is_file()):
+        for fname in self.maze_files:
             self.files.addItem(str(fname))
         self.files.currentItemChanged.connect(self.list_value_changed)
 
@@ -70,8 +83,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.maze = MazeItem()
         viewbox.addItem(self.maze)
 
-        self.label = QtWidgets.QLabel()
-
         self.slider = QSlider(QtCore.Qt.Horizontal)
         self.slider.setSingleStep(1)
         self.slider.setPageStep(10)
@@ -79,12 +90,29 @@ class MainWindow(QtWidgets.QMainWindow):
         self.slider.valueChanged.connect(self.slider_value_changed)
         self.reset()
 
-        layout.addWidget(self.files, 0, 0, 2, 1)
-        layout.addWidget(self.graphics, 0, 1)
-        layout.addWidget(self.slider, 1, 1)
-        layout.addWidget(self.label, 2, 0, 1, 2)
+        files_layout = QVBoxLayout()
+        files_layout.setContentsMargins(0, 0, 0, 0)
+        files_layout.addWidget(self.search)
+        files_layout.addWidget(self.files)
+        files_widget = QWidget()
+        files_widget.setLayout(files_layout)
+        graphics_layout = QVBoxLayout()
+        graphics_layout.setContentsMargins(0, 0, 0, 0)
+        graphics_layout.addWidget(self.graphics)
+        graphics_layout.addWidget(self.slider)
+        graphics_widget = QWidget()
+        graphics_widget.setLayout(graphics_layout)
+        central_splitter = QSplitter()
+        central_splitter.addWidget(files_widget)
+        central_splitter.addWidget(graphics_widget)
 
-        self.setCentralWidget(frame)
+        main_layout = QVBoxLayout()
+        main_layout.addWidget(central_splitter)
+        main_layout.setContentsMargins(4, 4, 4, 4)
+        main_widget = QWidget()
+        main_widget.setLayout(main_layout)
+
+        self.setCentralWidget(main_widget)
 
         self.context = zmq.Context()
         self.reply = self.context.socket(zmq.PUSH)
@@ -99,7 +127,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         QtCore.QTimer.singleShot(0, self.thread.start)
 
+    def filter_mazes(self, text):
+        keywords = text.split(' ')
+        self.files.clear()
+        for fname in self.maze_files:
+            for key in keywords:
+                if key not in str(fname):
+                    break
+            else:
+                self.files.addItem(str(fname))
+        self.files.setCurrentRow(0)
+
     def list_value_changed(self, after, before):
+        if not after:
+            return
         self.set_maze(after.text())
 
     def set_maze(self, fname):
@@ -112,15 +153,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.history = []
         self.slider.setValue(-1)
         self.slider.setRange(-1, -1)
-        self.label.setText('Ready')
+        self.status.showMessage('Ready')
 
     def slider_update(self):
         self.slider.setTickInterval(len(self.history) / 10)
         self.slider.setRange(0, len(self.history) - 1)
-        self.label_set_slider(self.slider.value())
+        self.status_set_slider(self.slider.value())
 
     def slider_value_changed(self, value):
-        self.label_set_slider(value)
+        self.status_set_slider(value)
         if not len(self.history):
             return
         state = self.history[value]
@@ -129,8 +170,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.maze.update_position(position)
         self.maze.update_discovery(discovery)
 
-    def label_set_slider(self, value):
-        self.label.setText('{}/{}'.format(value, len(self.history) - 1))
+    def status_set_slider(self, value):
+        self.status.showMessage('{}/{}'.format(value, len(self.history) - 1))
 
     def signal_received(self, message):
         if message.startswith(b'W'):
