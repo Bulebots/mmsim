@@ -126,8 +126,11 @@ def paint_position(painter, x, y, direction):
 
 
 class MazeItem(GraphicsObject):
-    def __init__(self, template):
+    def __init__(self):
         super().__init__()
+        self.reset(None)
+
+    def reset(self, template):
         self.distances = None
         self.walls = None
         self.template = template
@@ -139,6 +142,7 @@ class MazeItem(GraphicsObject):
         self.position_picture = QtGui.QPicture()
 
         self.generateTemplate()
+        self.update()
 
     def generateTemplate(self):
         self.template_picture = QtGui.QPicture()

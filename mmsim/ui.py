@@ -5,6 +5,7 @@ import zmq
 
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QSlider
+from PyQt5.QtWidgets import QListWidget
 from pyqtgraph import GraphicsLayoutWidget
 
 from .mazes import load_maze
@@ -47,23 +48,26 @@ class ZMQListener(QtCore.QObject):
 
 
 class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, host, port, maze, parent=None):
+    def __init__(self, host, port, path, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle('Micromouse maze simulator')
-        self.resize(600, 600)
+        self.resize(800, 600)
 
         self.history = []
 
         frame = QtWidgets.QFrame()
-        layout = QtWidgets.QVBoxLayout(frame)
+        layout = QtWidgets.QGridLayout(frame)
+
+        self.files = QListWidget()
+        for fname in sorted(x for x in path.iterdir() if x.is_file()):
+            self.files.addItem(str(fname))
+        self.files.currentItemChanged.connect(self.list_value_changed)
 
         self.graphics = GraphicsLayoutWidget()
         viewbox = self.graphics.addViewBox()
         viewbox.setAspectLocked()
-        template_file = Path(maze)
-        template = load_maze(template_file)
-        self.maze = MazeItem(template=template)
+        self.maze = MazeItem()
         viewbox.addItem(self.maze)
 
         self.label = QtWidgets.QLabel()
@@ -75,9 +79,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.slider.valueChanged.connect(self.slider_value_changed)
         self.reset()
 
-        layout.addWidget(self.graphics)
-        layout.addWidget(self.slider)
-        layout.addWidget(self.label)
+        layout.addWidget(self.files, 0, 0, 2, 1)
+        layout.addWidget(self.graphics, 0, 1)
+        layout.addWidget(self.slider, 1, 1)
+        layout.addWidget(self.label, 2, 0, 1, 2)
 
         self.setCentralWidget(frame)
 
@@ -93,6 +98,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.zeromq_listener.message.connect(self.signal_received)
 
         QtCore.QTimer.singleShot(0, self.thread.start)
+
+    def list_value_changed(self, after, before):
+        self.set_maze(after.text())
+
+    def set_maze(self, fname):
+        template_file = Path(fname)
+        template = load_maze(template_file)
+        self.maze.reset(template)
+        self.reset()
 
     def reset(self):
         self.history = []
@@ -141,12 +155,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thread.wait()
 
 
-def run(host, port, maze):
+def run(host, port, path):
     app = QtWidgets.QApplication(sys.argv)
-    main = MainWindow(host=host, port=port, maze=maze)
+    main = MainWindow(host=host, port=port, path=path)
     main.show()
     sys.exit(app.exec_())
-
-
-if __name__ == '__main__':
-    run()
