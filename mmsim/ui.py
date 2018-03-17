@@ -58,7 +58,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.path = path
         self.maze_files = sorted(
-            x for x in self.path.iterdir() if x.is_file()
+            fname.relative_to(self.path)
+            for fname in self.path.iterdir() if fname.is_file()
         )
 
         self.setWindowTitle('Micromouse maze simulator')
@@ -144,7 +145,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def set_maze(self, fname):
         template_file = Path(fname)
-        template = load_maze(template_file)
+        template = load_maze(self.path / template_file)
         self.maze.reset(template)
         self.reset()
 
