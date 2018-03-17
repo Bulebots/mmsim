@@ -1,6 +1,7 @@
 dist/
 __pycache__/
 .cache/
+.pytest_cache/
 .tox/
 *.egg-info/
 *~

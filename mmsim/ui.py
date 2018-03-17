@@ -184,9 +184,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.reply.send(b'ok')
             self.slider_update()
             return
-        if message == b'RESET':
+        if message == b'reset':
             self.reset()
             self.reply.send(b'ok')
+            return
+        if message == b'ping':
+            self.reply.send(b'pong')
             return
         raise ValueError('Unknown message received! "{}"'.format(message))
 

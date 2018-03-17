@@ -12,7 +12,7 @@ setup(
     long_description='''The server can load different mazes and any client
         can connect to it to ask for the current position walls, move from
         one cell to another and visualize the simulated micromouse state.''',
-    url='https://github.com/theseus/maze-simulator',
+    url='https://github.com/Theseus/mmsim',
     author='Miguel Sánchez de León Peque',
     author_email='peque@neosit.es',
     license='BSD License',
@@ -40,6 +40,6 @@ setup(
     extras_require={
         'dev': [],
         'test': ['tox'],
-        'docs': ['sphinx', 'sphinx_rtd_theme'],
+        'docs': ['sphinx', 'sphinx_rtd_theme', 'doc8'],
     },
 )
