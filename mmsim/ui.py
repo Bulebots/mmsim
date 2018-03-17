@@ -128,11 +128,11 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(0, self.thread.start)
 
     def filter_mazes(self, text):
-        keywords = text.split(' ')
+        keywords = text.lower().split(' ')
         self.files.clear()
         for fname in self.maze_files:
             for key in keywords:
-                if key not in str(fname):
+                if key not in str(fname).lower():
                     break
             else:
                 self.files.addItem(str(fname))
