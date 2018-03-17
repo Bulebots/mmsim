@@ -34,6 +34,19 @@ MAZE_00_DEFAULT = """+---+---+---+---+---+
 +---+---+---+---+---+
 """
 
+MAZE_00_POST_CHAR = """o---o---o---o---o---o
+|           |       |
+o   o---o---o   o   o
+|   |           |   |
+o   o   o   o---o   o
+|   |       |   |   |
+o   o---o---o   o   o
+|                   |
+o---o---o   o---o---o
+|                   |
+o---o---o---o---o---o
+"""
+
 MAZE_00 = numpy.array([
     [28, 12, 10, 10, 24],
     [20, 20, 12, 24, 20],
@@ -50,6 +63,11 @@ def test_load_maze_oshwdem():
 
 def test_load_maze_default():
     result = load_maze(StringIO(MAZE_00_DEFAULT))
+    assert (result == MAZE_00).all()
+
+
+def test_load_maze_post_char():
+    result = load_maze(StringIO(MAZE_00_POST_CHAR))
     assert (result == MAZE_00).all()
 
 

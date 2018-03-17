@@ -59,7 +59,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.path = path
         self.maze_files = sorted(
             fname.relative_to(self.path)
-            for fname in self.path.iterdir() if fname.is_file()
+            for fname in self.path.glob('**/*.txt') if fname.is_file()
         )
 
         self.setWindowTitle('Micromouse maze simulator')

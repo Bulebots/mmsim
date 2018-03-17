@@ -62,10 +62,11 @@ def _read_maze_oshwdem(txt: str) -> numpy.ndarray:
 
 def _read_maze_default(txt: str) -> numpy.ndarray:
     txt = txt.splitlines()
+    post_char = txt[0][0]
 
     south = txt[::2][1:][::-1]
     south = [[1 if wall == '---' else 0
-              for wall in row.strip('+').split('+')]
+              for wall in row.strip(post_char).split(post_char)]
              for row in south]
     south = numpy.array(south).astype('uint8').T
     north = numpy.roll(south, -1, axis=1)
