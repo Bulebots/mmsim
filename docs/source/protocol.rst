@@ -279,5 +279,18 @@ A real, complete micromouse client
 ==================================
 
 A real, complete micromouse client implemented in C can be found in the
-`Bulebule micromouse project
-<https://github.com/Theseus/bulebule/blob/master/scripts/simulation_client.c>`_.
+`Bulebule micromouse project <https://github.com/Theseus/bulebule/>`_.
+
+To try that client you need to first clone the repository::
+
+   git clone https://github.com/Theseus/bulebule.git
+
+Then change to the ``scripts/`` directory and compile the client::
+
+   cd bulebule/scripts/
+   make
+
+.. note:: You need to have ZMQ libraries installed in your system in order to
+   compile the project.
+
+Now simply run the client while the Micromouse Maze Simulator is running!
