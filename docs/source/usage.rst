@@ -23,7 +23,7 @@ Installation
 
 Installation is very straight-forward using Python's ``pip``::
 
-   pip install mmsim
+   pip3 install --user mmsim
 
 This will install all the required dependencies and will provide you with the
 ``mmsim`` command.

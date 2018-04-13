@@ -11,7 +11,7 @@ another and visualize the simulated micromouse state. `Watch it in action!
 
 Install it with::
 
-   pip install mmsim
+   pip3 install --user mmsim
 
 Run it with::
 
