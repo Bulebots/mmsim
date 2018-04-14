@@ -4,7 +4,7 @@ import struct
 import zmq
 
 
-def map_rotated_list(lst, rotation):
+def _map_rotated_list(lst, rotation):
     q = deque(lst)
     q.rotate(rotation)
     return dict(zip(lst, q))
@@ -18,7 +18,7 @@ STEPS = ('front', 'left', 'right', 'back')
 DIRECTIONS = ('north', 'east', 'south', 'west')
 DIRECTION_AFTER_STEP = dict(zip(
     ('front', 'left', 'back', 'right'),
-    (map_rotated_list(DIRECTIONS, rotation) for rotation in range(4))
+    (_map_rotated_list(DIRECTIONS, rotation) for rotation in range(4))
 ))
 ADJACENT_POSITION_CHANGE = {
     'north': (0, 1), 'east': (1, 0), 'south': (0, -1), 'west': (-1, 0)}
@@ -64,24 +64,21 @@ def server_send_state():
     return req.recv()
 
 
-def set_walls(x, y, **kwargs):
+def _set_walls(x, y, **kwargs):
     for direction, wall in kwargs.items():
         maze_walls[x][y][direction] = wall
 
 
-def adjacent_position(direction):
+def _build_adjacent_cell_wall(direction, wall):
     x, y = mouse_position
     xdiff, ydiff = ADJACENT_POSITION_CHANGE[direction]
-    return (x + xdiff, y + ydiff)
-
-
-def build_adjacent_cell_wall(direction, wall):
-    x, y = adjacent_position(direction)
+    x += xdiff
+    y += ydiff
     direction = DIRECTION_AFTER_STEP['back'][direction]
     maze_walls[x][y][direction] = wall
 
 
-def build_walls(walls):
+def _build_walls(walls):
     x, y = mouse_position
     for direction, wall in walls.items():
         if not wall:
@@ -89,8 +86,28 @@ def build_walls(walls):
         if maze_walls[x][y][direction] == wall:
             continue
         maze_walls[x][y][direction] = wall
-        build_adjacent_cell_wall(direction, wall)
+        _build_adjacent_cell_wall(direction, wall)
     maze_walls[x][y]['visited'] = 1
+
+
+def _initialize_outter_walls():
+    for x in range(MAZE_SIZE):
+        for y in range(MAZE_SIZE):
+            if x == 0:
+                _set_walls(x, y, west=1)
+            if y == 0:
+                _set_walls(x, y, south=1)
+            if x == MAZE_SIZE - 1:
+                _set_walls(x, y, east=1)
+            if y == MAZE_SIZE - 1:
+                _set_walls(x, y, north=1)
+
+
+def initialize_maze():
+    for x in range(MAZE_SIZE):
+        for y in range(MAZE_SIZE):
+            _set_walls(x, y, north=0, east=0, south=0, west=0, visited=0)
+    _initialize_outter_walls()
 
 
 def update_walls(left, front, right):
@@ -98,23 +115,7 @@ def update_walls(left, front, right):
     walls = deque([left, front, right, 0])
     walls.rotate(rotations[mouse_direction])
     walls = dict(zip(DIRECTIONS, walls))
-    build_walls(walls)
-
-
-def initialize_maze():
-    for x in range(MAZE_SIZE):
-        for y in range(MAZE_SIZE):
-            set_walls(x, y, north=0, east=0, south=0, west=0, visited=0)
-    for x in range(MAZE_SIZE):
-        for y in range(MAZE_SIZE):
-            if x == 0:
-                set_walls(x, y, west=1)
-            if y == 0:
-                set_walls(x, y, south=1)
-            if x == MAZE_SIZE - 1:
-                set_walls(x, y, east=1)
-            if y == MAZE_SIZE - 1:
-                set_walls(x, y, north=1)
+    _build_walls(walls)
 
 
 def position_after_step(step):

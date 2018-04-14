@@ -47,6 +47,9 @@ The `standalone simple solver example can be found as a script in the project
    algorithm is implemented in the last functions. In particular, the
    ``run_search()``, ``best_step()`` and ``recalculate_weights()`` functions.
 
+   Some functions start with an underscore. Those, you probably do not need
+   to edit them nor directly call them from your client.
+
 
 .. index:: real, client, C, Bulebule
 
