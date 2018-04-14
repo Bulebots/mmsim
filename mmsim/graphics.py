@@ -79,7 +79,7 @@ def paint_discovered(painter, distances, walls):
             -(y + .5) * CELL_WIDTH + WALL_WIDTH / 2 - 50,
             100, 100),
             QtCore.Qt.AlignCenter,
-            "%s" % distances[x][y])
+            '%s' % distances[x][y])
 
 
 def paint_template(painter, walls):

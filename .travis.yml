@@ -4,11 +4,18 @@ python:
   - 3.6
   - 3.5
 
+matrix:
+  include:
+    - python: 3.6
+      env: TOXENV=docs
+    - python: 3.6
+      env: TOXENV=lint
+
 install:
-  - pip install tox
+  - pip install tox tox-travis
 
 script:
-  - tox -e py
+  - tox
 
 after_script:
   - pip install codecov

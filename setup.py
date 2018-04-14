@@ -9,9 +9,9 @@ setup(
     name='mmsim',
     version=__version__,
     description='A simple Micromouse Maze Simulator server',
-    long_description='''The server can load different mazes and any client
+    long_description="""The server can load different mazes and any client
         can connect to it to ask for the current position walls, move from
-        one cell to another and visualize the simulated micromouse state.''',
+        one cell to another and visualize the simulated micromouse state.""",
     url='https://github.com/Theseus/mmsim',
     author='Miguel Sánchez de León Peque',
     author_email='peque@neosit.es',
@@ -38,8 +38,21 @@ setup(
         'pyqt5',
         'pyzmq'],
     extras_require={
-        'dev': [],
-        'test': ['tox'],
-        'docs': ['sphinx', 'sphinx_rtd_theme', 'doc8'],
+        'docs': [
+            'doc8',
+            'sphinx',
+            'sphinx_rtd_theme',
+        ],
+        'lint': [
+            'flake8',
+            'flake8-bugbear',
+            'flake8-per-file-ignores',
+            'flake8-quotes',
+            'pep8-naming',
+        ],
+        'test': [
+            'pytest',
+            'pytest-cov',
+        ],
     },
 )

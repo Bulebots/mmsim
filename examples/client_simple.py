@@ -158,7 +158,7 @@ def best_step():
 def run_search():
     server_reset()
     initialize_maze()
-    for i in range(MAX_ITERATIONS):
+    for _ in range(MAX_ITERATIONS):
         update_walls(*server_read_walls())
         recalculate_weights()
         server_send_state()
