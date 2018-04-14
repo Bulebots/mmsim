@@ -50,6 +50,19 @@ The `standalone simple solver example can be found as a script in the project
    Some functions start with an underscore. Those, you probably do not need
    to edit them nor directly call them from your client.
 
+Using this client template you may try your own search algorithms. For example,
+if you want to try a left-wall follower robot, simply change the
+``best_step()`` function to:
+
+.. code:: python
+
+   def best_step():
+       prefer = ['left', 'front', 'right', 'back']
+       allowed_steps = [step for step in prefer if is_allowed_step(step)]
+       return allowed_steps[0]
+
+Although this search algorithm will fail to reach the goal in many cases.
+
 
 .. index:: real, client, C, Bulebule
 

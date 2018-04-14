@@ -155,6 +155,12 @@ def best_step():
     return possible_steps[best]
 
 
+def best_step():
+    priority = ['left', 'front', 'right', 'back']
+    possible_steps = [step for step in priority if is_allowed_step(step)]
+    return possible_steps[0]
+
+
 def run_search():
     server_reset()
     initialize_maze()
