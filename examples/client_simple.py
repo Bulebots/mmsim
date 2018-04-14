@@ -1,39 +1,25 @@
 from collections import deque
-from collections import namedtuple
 import struct
 
 import zmq
+
+
+def map_rotated_list(lst, rotation):
+    q = deque(lst)
+    q.rotate(rotation)
+    return dict(zip(lst, q))
 
 
 MAZE_SIZE = 16
 GOAL_CELLS = [(7, 7), (7, 8), (8, 7), (8, 8)]
 MAX_ITERATIONS = 1000
 
-STEPS = ['front', 'left', 'right', 'back']
-DIRECTIONS = ['north', 'east', 'south', 'west']
-
-OPPOSITE_DIRECTION = {
-    'north': 'south', 'east': 'west', 'south': 'north', 'west': 'east'}
-DIRECTION_AFTER_STEP = {
-    'front': {'north': 'north', 'east': 'east',
-              'south': 'south', 'west': 'west'},
-    'left': {'north': 'west', 'east': 'north',
-             'south': 'east', 'west': 'south'},
-    'right': {'north': 'east', 'east': 'south',
-              'south': 'west', 'west': 'north'},
-    'back': {'north': 'south', 'east': 'west',
-             'south': 'north', 'west': 'east'},
-}
-POSITION_CHANGE_AFTER_STEP = {
-    'front': {'north': (0, 1), 'east': (1, 0),
-              'south': (0, -1), 'west': (-1, 0)},
-    'left': {'north': (-1, 0), 'east': (0, 1),
-             'south': (1, 0), 'west': (0, -1)},
-    'right': {'north': (1, 0), 'east': (0, -1),
-              'south': (-1, 0), 'west': (0, 1)},
-    'back': {'north': (0, -1), 'east': (-1, 0),
-             'south': (0, 1), 'west': (1, 0)},
-}
+STEPS = ('front', 'left', 'right', 'back')
+DIRECTIONS = ('north', 'east', 'south', 'west')
+DIRECTION_AFTER_STEP = dict(zip(
+    ('front', 'left', 'back', 'right'),
+    (map_rotated_list(DIRECTIONS, rotation) for rotation in range(4))
+))
 ADJACENT_POSITION_CHANGE = {
     'north': (0, 1), 'east': (1, 0), 'south': (0, -1), 'west': (-1, 0)}
 
@@ -91,7 +77,7 @@ def adjacent_position(direction):
 
 def build_adjacent_cell_wall(direction, wall):
     x, y = adjacent_position(direction)
-    direction = OPPOSITE_DIRECTION[direction]
+    direction = DIRECTION_AFTER_STEP['back'][direction]
     maze_walls[x][y][direction] = wall
 
 
@@ -133,7 +119,8 @@ def initialize_maze():
 
 def position_after_step(step):
     x, y = mouse_position
-    xdiff, ydiff = POSITION_CHANGE_AFTER_STEP[step][mouse_direction]
+    direction = DIRECTION_AFTER_STEP[step][mouse_direction]
+    xdiff, ydiff = ADJACENT_POSITION_CHANGE[direction]
     return (x + xdiff, y + ydiff)
 
 
