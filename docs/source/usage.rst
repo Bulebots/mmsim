@@ -39,7 +39,7 @@ To run the simulator simply::
    mmsim
 
 This will, the first time, download a set of mazes from `micromouseonline
-<https://github.com/micromouseonline/micromouse_maze_tool>`_.
+<https://github.com/micromouseonline/mazefiles>`_.
 
 If you have a local maze files collection in text format you may use that
 instead::
