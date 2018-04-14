@@ -22,6 +22,7 @@ Contents
 
    usage.rst
    protocol.rst
+   examples.rst
    developers.rst
 
 
