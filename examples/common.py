@@ -128,10 +128,6 @@ class Simulator:
         walls = dict(zip(DIRECTIONS, walls))
         self._build_walls(walls)
 
-    @abstractmethod
-    def calculate_distances(self):
-        raise NotImplementedError
-
     def position_after_step(self, step):
         direction = DIRECTION_AFTER_STEP[step][self.direction]
         return self.neighbor(self.position, direction)
@@ -140,20 +136,17 @@ class Simulator:
         self.position = self.position_after_step(step)
         self.direction = DIRECTION_AFTER_STEP[step][self.direction]
 
-    def is_allowed_step(self, step):
+    def _is_allowed_step(self, step):
         x, y = self.position
         direction = DIRECTION_AFTER_STEP[step][self.direction]
         return not self.walls[x][y][direction]
 
+    def allowed_steps(self):
+        return [step for step in STEPS if self._is_allowed_step(step)]
+
     def distance_after_step(self, step):
         position = self.position_after_step(step)
         return self.get_distance(position)
-
-    def best_step(self):
-        possible_steps = [step for step in STEPS if self.is_allowed_step(step)]
-        distances = [self.distance_after_step(step) for step in possible_steps]
-        best = distances.index(min(distances))
-        return possible_steps[best]
 
     def run(self):
         client = Client()
@@ -165,3 +158,11 @@ class Simulator:
             if self.position in self.goals:
                 break
             self.move(self.best_step())
+
+    @abstractmethod
+    def calculate_distances(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def best_step(self):
+        raise NotImplementedError

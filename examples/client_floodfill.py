@@ -31,6 +31,12 @@ class FloodFill(Simulator):
                 self.set_distance(neighbor, distance)
                 queue.put(neighbor)
 
+    def best_step(self):
+        allowed = self.allowed_steps()
+        distances = [self.distance_after_step(step) for step in allowed]
+        best = distances.index(min(distances))
+        return allowed[best]
+
 
 simulator = FloodFill(16, goals=[(7, 7), (7, 8), (8, 7), (8, 8)])
 simulator.run()
