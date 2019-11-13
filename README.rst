@@ -22,16 +22,16 @@ the `Micromouse Maze Simulator documentation <https://mmsim.readthedocs.io>`_.
 
 
 .. |build|
-   image:: https://api.travis-ci.org/Theseus/mmsim.svg?branch=master
-      :target: https://travis-ci.org/Theseus/mmsim
+   image:: https://api.travis-ci.org/Bulebots/mmsim.svg?branch=master
+      :target: https://travis-ci.org/Bulebots/mmsim
       :alt: Build badge
 .. |documentation|
    image:: https://readthedocs.org/projects/mmsim/badge/?version=stable
       :target: https://mmsim.readthedocs.io/
       :alt: Documentation badge
-.. |coverage| image:: https://codecov.io/github/Theseus/mmsim/coverage.svg?branch=master
-      :target: https://codecov.io/github/Theseus/mmsim
+.. |coverage| image:: https://codecov.io/github/Bulebots/mmsim/coverage.svg?branch=master
+      :target: https://codecov.io/github/Bulebots/mmsim
       :alt: Coverage badge
-.. |requirements| image:: https://requires.io/github/Theseus/mmsim/requirements.svg
-      :target: https://requires.io/github/Theseus/mmsim/requirements/
+.. |requirements| image:: https://requires.io/github/Bulebots/mmsim/requirements.svg
+      :target: https://requires.io/github/Bulebots/mmsim/requirements/
       :alt: Requirements badge

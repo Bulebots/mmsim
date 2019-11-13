@@ -16,7 +16,7 @@ communication protocol. Only the code required for the client requests is
 implemented, with no actual mouse search logic.
 
 The `standalone tester example can be found as a script in the project
-<https://github.com/Theseus/mmsim/blob/master/examples/client_tester.py>`_.
+<https://github.com/Bulebots/mmsim/blob/master/examples/client_tester.py>`_.
 
 
 .. index:: client, simple, solver, python
@@ -40,7 +40,7 @@ The decision making is very simple:
 - It will move to the cell that has the lowest weight.
 
 The `standalone simple solver example can be found as a script in the project
-<https://github.com/Theseus/mmsim/blob/master/examples/client_simple.py>`_.
+<https://github.com/Bulebots/mmsim/blob/master/examples/client_simple.py>`_.
 
 .. note:: There is a lot of code just to implement maze storage, adding walls,
    client-server communication... The decision making and the actual search
@@ -70,14 +70,14 @@ A real micromouse client in C
 =============================
 
 A real, complete micromouse client implemented in C can be found in the
-`Bulebule micromouse project <https://github.com/Theseus/bulebule/>`_. This
+`Bulebule micromouse project <https://github.com/Bulebots/bulebule/>`_. This
 client executes the search algorithm that effectively runs in the Bulebule
 micromouse robot, implementing only the required functions to communicate with
 the Micromouse Maze Simulation server.
 
 To try that client you need to first download the Bulebule repository::
 
-   git clone https://github.com/Theseus/bulebule.git
+   git clone https://github.com/Bulebots/bulebule.git
 
 Then change to the ``scripts/`` directory and compile the client::
 

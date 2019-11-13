@@ -12,7 +12,7 @@ setup(
     long_description="""The server can load different mazes and any client
         can connect to it to ask for the current position walls, move from
         one cell to another and visualize the simulated micromouse state.""",
-    url='https://github.com/Theseus/mmsim',
+    url='https://github.com/Bulebots/mmsim',
     author='Miguel Sánchez de León Peque',
     author_email='peque@neosit.es',
     license='BSD License',
