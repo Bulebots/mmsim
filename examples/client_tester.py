@@ -23,8 +23,9 @@ def reset():
 def read_walls(x, y, direction):
     direction = direction[0].upper().encode()
     req.send(b'W' + struct.pack('2B', x, y) + direction)
-    return dict(zip(['left', 'front', 'right'],
-                    struct.unpack('3B', req.recv())))
+    return dict(
+        zip(['left', 'front', 'right'], struct.unpack('3B', req.recv()))
+    )
 
 
 def send_state(x, y, direction, maze_weights, maze_walls):
