@@ -2,8 +2,8 @@
 Setup module.
 """
 from setuptools import setup
-from mmsim import __version__
 
+from mmsim import __version__
 
 setup(
     name='mmsim',
@@ -25,34 +25,19 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     keywords='micromouse maze server simulator',
-    entry_points={
-        'console_scripts': [
-            'mmsim = mmsim.commands:launch',
-        ],
-    },
+    entry_points={'console_scripts': ['mmsim = mmsim.commands:launch']},
     packages=['mmsim'],
-    install_requires=[
-        'click',
-        'numpy',
-        'pyqtgraph',
-        'pyqt5',
-        'pyzmq'],
+    install_requires=['click', 'numpy', 'pyqtgraph', 'pyqt5', 'pyzmq'],
     extras_require={
-        'docs': [
-            'doc8',
-            'sphinx',
-            'sphinx_rtd_theme',
-        ],
+        'docs': ['doc8', 'sphinx', 'sphinx_rtd_theme'],
         'lint': [
+            'black',
             'flake8',
             'flake8-bugbear',
-            'flake8-per-file-ignores',
+            'flake8-isort',
             'flake8-quotes',
             'pep8-naming',
         ],
-        'test': [
-            'pytest',
-            'pytest-cov',
-        ],
+        'test': ['pytest', 'pytest-cov'],
     },
 )

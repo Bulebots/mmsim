@@ -28,7 +28,8 @@ def clean_tar_members(members: TarMembers) -> TarMembers:
 
 
 def select_tar_members(
-        members: TarMembers, parent: Path, new_path: Path) -> TarMembers:
+    members: TarMembers, parent: Path, new_path: Path
+) -> TarMembers:
     """
     Select .tar members given a parent path and rename them to have a new
     path instead.
@@ -68,8 +69,10 @@ def download_micromouseonline_mazes(download_path: Path):
     download_path
         Where to download the maze files to.
     """
-    url = 'https://github.com/micromouseonline/mazefiles/'\
+    url = (
+        'https://github.com/micromouseonline/mazefiles/'
         'archive/master.tar.gz'
+    )
     reveal_tar, headers = urlretrieve(url)
     with tarfile.open(reveal_tar) as tar:
         members = clean_tar_members(tar.getmembers())

@@ -4,7 +4,6 @@ from typing import IO
 
 import numpy
 
-
 MAZE_SIZE = 16
 
 VISITED_BIT = 1
@@ -18,12 +17,9 @@ def read_walls(walls, x, y, direction):
     if walls is None:
         return (0, 0, 0)
     wall = walls[x][y]
-    detections = deque([
-        wall & EAST_BIT,
-        wall & SOUTH_BIT,
-        wall & WEST_BIT,
-        wall & NORTH_BIT,
-    ])
+    detections = deque(
+        [wall & EAST_BIT, wall & SOUTH_BIT, wall & WEST_BIT, wall & NORTH_BIT]
+    )
     if direction == 'E':
         detections.rotate(1)
     elif direction == 'N':
@@ -40,16 +36,21 @@ def _read_maze_oshwdem(txt: str) -> numpy.ndarray:
     txt = [''.join(i) for i in zip(*txt.splitlines())]
 
     south = txt[::4][:-1]
-    south = [[1 if wall == '|' else 0
-              for wall in row.replace('B', '+').strip('+').split('+')]
-             for row in south]
+    south = [
+        [
+            1 if wall == '|' else 0
+            for wall in row.replace('B', '+').strip('+').split('+')
+        ]
+        for row in south
+    ]
     south = numpy.array(south).astype('uint8').T
     north = numpy.roll(south, -1, axis=1)
 
     west = txt[1::4]
-    west = [[1 if wall == '-' else 0
-             for wall in column[::2][:-1]]
-            for column in west]
+    west = [
+        [1 if wall == '-' else 0 for wall in column[::2][:-1]]
+        for column in west
+    ]
     west = numpy.array(west).astype('uint8').T
     east = numpy.roll(west, -1, axis=0)
 
@@ -65,16 +66,21 @@ def _read_maze_default(txt: str) -> numpy.ndarray:
     post_char = txt[0][0]
 
     south = txt[::2][1:][::-1]
-    south = [[1 if wall == '---' else 0
-              for wall in row.strip(post_char).split(post_char)]
-             for row in south]
+    south = [
+        [
+            1 if wall == '---' else 0
+            for wall in row.strip(post_char).split(post_char)
+        ]
+        for row in south
+    ]
     south = numpy.array(south).astype('uint8').T
     north = numpy.roll(south, -1, axis=1)
 
     west = txt[1::2][::-1]
-    west = [[1 if wall == '|' else 0
-             for wall in column[::4][:-1]]
-            for column in west]
+    west = [
+        [1 if wall == '|' else 0 for wall in column[::4][:-1]]
+        for column in west
+    ]
     west = numpy.array(west).astype('uint8').T
     east = numpy.roll(west, -1, axis=0)
 

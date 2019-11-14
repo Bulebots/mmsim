@@ -34,7 +34,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.coverage',
-    'sphinx.ext.ifconfig'
+    'sphinx.ext.ifconfig',
 ]
 
 autodoc_default_flags = ['members', 'undoc-members', 'show-inheritance']
@@ -125,7 +125,7 @@ html_theme = 'sphinx_rtd_theme'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-#html_logo = 'logo/logo.svg'
+# html_logo = 'logo/logo.svg'
 
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -135,7 +135,7 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-#html_static_path = ['logo', 'figures']
+# html_static_path = ['logo', 'figures']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
@@ -191,10 +191,8 @@ htmlhelp_basename = 'mmsimdoc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     # 'papersize': 'letterpaper',
-
     # The font size ('10pt', '11pt' or '12pt').
     # 'pointsize': '10pt',
-
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
 }
@@ -203,13 +201,18 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'mmsim.tex', 'Micromouse Maze Simulator Documentation',
-     'The Micromouse Maze Simulator contributors.', 'manual'),
+    (
+        'index',
+        'mmsim.tex',
+        'Micromouse Maze Simulator Documentation',
+        'The Micromouse Maze Simulator contributors.',
+        'manual',
+    )
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = 'logo/logo.svg'
+# latex_logo = 'logo/logo.svg'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.
@@ -232,8 +235,13 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mmsim', 'A maze-solving robot platform',
-     ['The Micromouse Maze Simulator contributors'], 1)
+    (
+        'index',
+        'mmsim',
+        'A maze-solving robot platform',
+        ['The Micromouse Maze Simulator contributors'],
+        1,
+    )
 ]
 
 # If true, show URL addresses after external links.
@@ -245,9 +253,15 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'mmsim', 'Micromouse Maze Simulator Documentation',
-     'The Micromouse Maze Simulator contributors.', 'mmsim',
-     'A maze-solving robot platform', 'Miscellaneous'),
+    (
+        'index',
+        'mmsim',
+        'Micromouse Maze Simulator Documentation',
+        'The Micromouse Maze Simulator contributors.',
+        'mmsim',
+        'A maze-solving robot platform',
+        'Miscellaneous',
+    )
 ]
 
 # Documents to append as an appendix to all manuals.

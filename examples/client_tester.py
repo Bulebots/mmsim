@@ -2,7 +2,6 @@ import struct
 
 import zmq
 
-
 MAZE_SIZE = 16
 
 ctx = zmq.Context()

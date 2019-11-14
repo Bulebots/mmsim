@@ -3,8 +3,8 @@ from queue import Queue
 
 from numpy import inf
 
-from common import Simulator
 from common import DIRECTIONS
+from common import Simulator
 
 
 class FloodFill(Simulator):

@@ -1,25 +1,20 @@
-from itertools import product
 import struct
+from itertools import product
 
 import numpy
-from pyqtgraph import (
-    mkBrush,
-    mkPen,
-    GraphicsObject,
-    QtCore,
-    QtGui,
-)
-
-from .mazes import read_walls
+from pyqtgraph import GraphicsObject
+from pyqtgraph import QtCore
+from pyqtgraph import QtGui
+from pyqtgraph import mkBrush
+from pyqtgraph import mkPen
 
 from .mazes import EAST_BIT
-from .mazes import SOUTH_BIT
-from .mazes import WEST_BIT
-from .mazes import NORTH_BIT
-from .mazes import VISITED_BIT
-
 from .mazes import MAZE_SIZE
-
+from .mazes import NORTH_BIT
+from .mazes import SOUTH_BIT
+from .mazes import VISITED_BIT
+from .mazes import WEST_BIT
+from .mazes import read_walls
 
 CELL_WIDTH = 180
 WALL_WIDTH = 12
@@ -36,33 +31,41 @@ def paint_walls(painter, walls, color):
     for (x, y) in product(range(MAZE_SIZE), repeat=2):
         wall = walls[y][x]
         if wall & EAST_BIT:
-            painter.drawRect(QtCore.QRectF(
-                (y + 1) * CELL_WIDTH - WALL_WIDTH / 2,
-                -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
-                WALL_WIDTH,
-                CELL_WIDTH,
-            ))
+            painter.drawRect(
+                QtCore.QRectF(
+                    (y + 1) * CELL_WIDTH - WALL_WIDTH / 2,
+                    -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
+                    WALL_WIDTH,
+                    CELL_WIDTH,
+                )
+            )
         if wall & SOUTH_BIT:
-            painter.drawRect(QtCore.QRectF(
-                y * CELL_WIDTH + WALL_WIDTH / 2,
-                -x * CELL_WIDTH + WALL_WIDTH / 2,
-                CELL_WIDTH,
-                WALL_WIDTH,
-            ))
+            painter.drawRect(
+                QtCore.QRectF(
+                    y * CELL_WIDTH + WALL_WIDTH / 2,
+                    -x * CELL_WIDTH + WALL_WIDTH / 2,
+                    CELL_WIDTH,
+                    WALL_WIDTH,
+                )
+            )
         if wall & WEST_BIT:
-            painter.drawRect(QtCore.QRectF(
-                y * CELL_WIDTH - WALL_WIDTH / 2,
-                -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
-                WALL_WIDTH,
-                CELL_WIDTH,
-            ))
+            painter.drawRect(
+                QtCore.QRectF(
+                    y * CELL_WIDTH - WALL_WIDTH / 2,
+                    -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
+                    WALL_WIDTH,
+                    CELL_WIDTH,
+                )
+            )
         if wall & NORTH_BIT:
-            painter.drawRect(QtCore.QRectF(
-                y * CELL_WIDTH + WALL_WIDTH / 2,
-                -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
-                CELL_WIDTH,
-                WALL_WIDTH,
-            ))
+            painter.drawRect(
+                QtCore.QRectF(
+                    y * CELL_WIDTH + WALL_WIDTH / 2,
+                    -(x + 1) * CELL_WIDTH + WALL_WIDTH / 2,
+                    CELL_WIDTH,
+                    WALL_WIDTH,
+                )
+            )
 
 
 def paint_discovered(painter, distances, walls):
@@ -74,12 +77,16 @@ def paint_discovered(painter, distances, walls):
             wall = walls[x][y]
             if wall & VISITED_BIT:
                 painter.setPen(mkPen(color=GREEN))
-        painter.drawText(QtCore.QRectF(
-            (x + .5) * CELL_WIDTH + WALL_WIDTH / 2 - 50,
-            -(y + .5) * CELL_WIDTH + WALL_WIDTH / 2 - 50,
-            100, 100),
+        painter.drawText(
+            QtCore.QRectF(
+                (x + 0.5) * CELL_WIDTH + WALL_WIDTH / 2 - 50,
+                -(y + 0.5) * CELL_WIDTH + WALL_WIDTH / 2 - 50,
+                100,
+                100,
+            ),
             QtCore.Qt.AlignCenter,
-            '%s' % distances[x][y])
+            '%s' % distances[x][y],
+        )
 
 
 def paint_template(painter, walls):
@@ -88,12 +95,14 @@ def paint_template(painter, walls):
     for (x, y) in product(range(MAZE_SIZE + 1), repeat=2):
         painter.setBrush(mkBrush(WHITE))
         painter.setPen(mkPen(None))
-        painter.drawRect(QtCore.QRectF(
-            x * CELL_WIDTH - WALL_WIDTH / 2,
-            -y * CELL_WIDTH + WALL_WIDTH / 2,
-            WALL_WIDTH,
-            WALL_WIDTH,
-        ))
+        painter.drawRect(
+            QtCore.QRectF(
+                x * CELL_WIDTH - WALL_WIDTH / 2,
+                -y * CELL_WIDTH + WALL_WIDTH / 2,
+                WALL_WIDTH,
+                WALL_WIDTH,
+            )
+        )
 
 
 def paint_position(painter, x, y, direction):
@@ -117,12 +126,14 @@ def paint_position(painter, x, y, direction):
     elif direction == 'N':
         x_compensation = (CELL_WIDTH - robot_width) / 2
         y_compensation = CELL_WIDTH - robot_height
-    painter.drawRect(QtCore.QRectF(
-        x * CELL_WIDTH + x_compensation,
-        -(y + 1) * CELL_WIDTH + y_compensation,
-        robot_width,
-        robot_height,
-    ))
+    painter.drawRect(
+        QtCore.QRectF(
+            x * CELL_WIDTH + x_compensation,
+            -(y + 1) * CELL_WIDTH + y_compensation,
+            robot_width,
+            robot_height,
+        )
+    )
 
 
 class MazeItem(GraphicsObject):

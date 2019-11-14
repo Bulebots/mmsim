@@ -1,9 +1,10 @@
-from pathlib import Path
 import struct
 import sys
-import zmq
+from pathlib import Path
 
-from PyQt5 import QtCore, QtWidgets
+import zmq
+from PyQt5 import QtCore
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QListWidget
 from PyQt5.QtWidgets import QSlider
@@ -13,8 +14,8 @@ from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QWidget
 from pyqtgraph import GraphicsLayoutWidget
 
-from .mazes import load_maze
 from .graphics import MazeItem
+from .mazes import load_maze
 
 
 class ZMQListener(QtCore.QObject):
@@ -59,7 +60,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.path = path
         self.maze_files = sorted(
             fname.relative_to(self.path)
-            for fname in self.path.glob('**/*.txt') if fname.is_file()
+            for fname in self.path.glob('**/*.txt')
+            if fname.is_file()
         )
 
         self.setWindowTitle('Micromouse maze simulator')
