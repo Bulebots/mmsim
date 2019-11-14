@@ -1,3 +1,6 @@
+"""
+Common code shared among different simulators/solvers.
+"""
 import struct
 from abc import ABCMeta
 from abc import abstractmethod
@@ -30,6 +33,9 @@ NEIGHBOR_POSITION_CHANGE = {
 
 
 class Client(metaclass=ABCMeta):
+    """
+    Basic interface to communicate with the simulation server.
+    """
     def __init__(self):
         self.ctx = zmq.Context()
         self.req = self.ctx.socket(zmq.REQ)
@@ -65,6 +71,9 @@ class Client(metaclass=ABCMeta):
 
 
 class Simulator:
+    """
+    Create and update the world environment as seen by the robot.
+    """
     def __init__(self, size, goals):
         self.size = size
         self.goals = goals

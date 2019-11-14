@@ -1,12 +1,7 @@
-.. index:: examples
-
-
 ********
 Examples
 ********
 
-
-.. index:: client, tester, python
 
 Protocol tester in Python
 =========================
@@ -19,54 +14,23 @@ The `standalone tester example can be found as a script in the project
 <https://github.com/Bulebots/mmsim/blob/master/examples/client_tester.py>`_.
 
 
-.. index:: client, simple, solver, python
+Python solvers
+==============
 
-Simple solver in Python
-=======================
+The Micromouse Maze Simulator project includes a couple of solvers implemented
+in Python.
 
-The Micromouse Maze Simulator project includes a fully working solver example
-implemented in Python. This client implements a robot that is able to explore
-the maze (i.e.: read and update walls, move...) while making decisions on
-which move to make on each step.
+It is recommended to understand them in order, according to their complexity:
 
-The decision making is very simple:
-
-- Each time the robot passes through a cell, it increments its associated
-  weight by 1.
-- It then looks around to see the possible moves it can make (i.e.: having a
-  wall will prevent a movement in that direction).
-- Among the possible moves, it will look at the weights of the next possible
-  cells and select the lowest weight.
-- It will move to the cell that has the lowest weight.
-
-The `standalone simple solver example can be found as a script in the project
-<https://github.com/Bulebots/mmsim/blob/master/examples/client_simple.py>`_.
-
-.. note:: There is a lot of code just to implement maze storage, adding walls,
-   client-server communication... The decision making and the actual search
-   algorithm is implemented in the last functions. In particular, the
-   ``run_search()``, ``best_step()`` and ``recalculate_weights()`` functions.
-
-   Some functions start with an underscore. Those, you probably do not need
-   to edit them nor directly call them from your client.
-
-Using this client template you may try your own search algorithms. For example,
-if you want to try a left-wall follower robot, simply change the
-``best_step()`` function to:
-
-.. code:: python
-
-   def best_step():
-       prefer = ['left', 'front', 'right', 'back']
-       allowed_steps = [step for step in prefer if is_allowed_step(step)]
-       return allowed_steps[0]
-
-Although this search algorithm will fail to reach the goal in many cases.
+#. `A left wall follower example`_, which is able to follow the left wall, but
+   is insufficient to solve most competition mazes.
+#. `A simple solver example`_, which by simply incrementing a counter for each
+   cell it passes through by 1 is able to solve all mazes eventually.
+#. `A flood fill solver example`_, which efficiently solves all mazes
+   eventually.
 
 
-.. index:: real, client, C, Bulebule
-
-A real micromouse client in C
+A real micromouse solver in C
 =============================
 
 A real, complete micromouse client implemented in C can be found in the
@@ -88,3 +52,11 @@ Then change to the ``scripts/`` directory and compile the client::
    compile the project.
 
 Now simply run the client while the Micromouse Maze Simulator is running!
+
+
+.. _A left wall follower example:
+   https://github.com/Bulebots/mmsim/blob/master/examples/client_leftwall.py
+.. _A simple solver example:
+   https://github.com/Bulebots/mmsim/blob/master/examples/client_simple.py
+.. _A flood fill solver example:
+   https://github.com/Bulebots/mmsim/blob/master/examples/client_floodfill.py

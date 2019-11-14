@@ -9,6 +9,9 @@ from common import DIRECTIONS
 
 class FloodFill(Simulator):
     def calculate_distances(self):
+        """
+        Update distances to goal with the flood fill algorithm.
+        """
         queue = Queue()
 
         # Distances initialization
@@ -32,6 +35,9 @@ class FloodFill(Simulator):
                 queue.put(neighbor)
 
     def best_step(self):
+        """
+        Take a step into the neighbor cell with the lowest distance to center.
+        """
         allowed = self.allowed_steps()
         distances = [self.distance_after_step(step) for step in allowed]
         best = distances.index(min(distances))
